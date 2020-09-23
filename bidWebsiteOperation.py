@@ -17,7 +17,6 @@ import io
 #操作網站的class
 class bidWebsiteOperation:
     def __init__(self,main_url,auid):
-        self.characters = '0123456789abcdefghijklmnopqrstuvwxyz'
         self.main_url = main_url
         self.auid = auid
     def bid_price(self,n_times=1):
@@ -45,15 +44,23 @@ class bidWebsiteOperation:
         #####################
     ##############################################################################################
     def check_first_bidder(self,account):
+        first_account=""
         for i in range(0,10):
             try:
                 first_account = json.loads(requests.post(self.main_url+'/product/product00/websocket', data={'message':'{"no":3,"auid":"%s"}'%self.auid,}, timeout=0.8).json())['detail'][0]
-            except: print('check timeout');continue
-            if first_account: break
-        if '得標' in first_account['account']: return 'end'
-        if (account[:-2]+"**") not in first_account['account']:
-            print('[NOT YOU]', first_account['account'], first_account['bidprice'])
-        else: print(first_account['account'], first_account['bidprice']);return 1
+            except:
+                print('check timeout')
+                continue
+            if first_account: 
+                break
+        if first_account !="":
+            if '得標' in first_account['account']: 
+                return 'end'
+            if (account[:-2]+"**") not in first_account['account']:
+                print('[NOT YOU]', first_account['account'], first_account['bidprice'])
+            else: 
+                print(first_account['account'], first_account['bidprice'])
+                return 1
     ##############################################################################################
 
     def processPic_bid(self,filepath):

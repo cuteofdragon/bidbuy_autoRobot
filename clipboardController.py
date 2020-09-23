@@ -10,7 +10,7 @@ import keras
 import sys
 import shutil
 from requests import Session
-import PIL.Image as Image
+from PIL import Image
 import win32clipboard,win32con
 import io
 
@@ -32,5 +32,5 @@ class clipboradAction:
             image = Image.open(io.BytesIO(data))
             image.save('img.jpeg')
             return "OK"
-        except:
+        except Exception as e:
             return "wait"

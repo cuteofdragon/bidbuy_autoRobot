@@ -18,6 +18,7 @@ from clipboardController import clipboradAction
 
 class bidbuy(clipboradAction,bidWebsiteOperation):
     def __init__(self,maxPrice,main_url,auid,refreshPriceTimer):
+        self.characters = '0123456789abcdefghijklmnopqrstuvwxyz'
         self.bid_model=keras.models.load_model('model/bid_model.h5')
         self.maxPrice = maxPrice
         self.main_url = main_url
@@ -32,7 +33,7 @@ class bidbuy(clipboradAction,bidWebsiteOperation):
         while True:
             self.nowPrice = self.bid_price(self.auid)
             time.sleep(float(self.refreshPriceTimer))
-
+            print("目前金額:$%s" % self.nowPrice)
     def main(self):
         while True:
             if int(self.nowPrice) >= int(self.maxPrice):
@@ -42,7 +43,9 @@ class bidbuy(clipboradAction,bidWebsiteOperation):
                 ReadClipResult = self.ReadClipboard()
                 if ReadClipResult == "OK":
                     X = self.processPic_bid('img.jpeg')
-                    predicted = ''.join([self.characters[(np.argmax(p))] for p in self.bid_model.predict(X)])
+                    predicted = ''
+                    for p in self.bid_model.predict(X):
+                        predicted += self.characters[(np.argmax(p))]
                     print(predicted)
                     self.copy_toClipboard(predicted)
                 time.sleep(0.01)
@@ -61,7 +64,7 @@ print("請校正您的按鍵精靈啟動時間")
 
 
 account  = "a0937"#input('02.帳　　號:　') 
-auid = "496293"#input('01.投標物件: ')
+auid = "476150"#input('01.投標物件: ')
 
 WebsiteOperation = bidWebsiteOperation(main_url,auid)
 WebsiteOperation.check_first_bidder(account)
