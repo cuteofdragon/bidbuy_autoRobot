@@ -17,31 +17,33 @@ from bidWebsiteOperation import bidWebsiteOperation
 from clipboardController import clipboradAction
 
 class bidbuy(clipboradAction,bidWebsiteOperation):
-    def __init__(self,maxPrice,main_url,auid,refreshPriceTimer):
+    def __init__(self,maxPrice,main_url,auid):
         self.characters = '0123456789abcdefghijklmnopqrstuvwxyz'
         self.bid_model=keras.models.load_model('model/bid_model.h5')
         self.maxPrice = maxPrice
         self.main_url = main_url
         self.auid = auid
-        self.refreshPriceTimer = refreshPriceTimer
-        self.nowPrice = self.bid_price(self.auid)
-        t = threading.Thread(target = self.refreshPrice)
-        # 執行更新價格的執行緒
-        t.start()
-        pass
-    def refreshPrice(self):
-        while True:
+        self.nowPrice = 0
+        try:
             self.nowPrice = self.bid_price(self.auid)
-            time.sleep(float(self.refreshPriceTimer))
-            print("目前金額:$%s" % self.nowPrice)
+        except:
+            print ("查價功能被網站封鎖，請稍後再試")
+        pass
     def main(self):
         while True:
-            if int(self.nowPrice) >= int(self.maxPrice):
-                print ('超過最高投標金額，停止驗證碼辨識')
-                break
             try:
                 ReadClipResult = self.ReadClipboard()
                 if ReadClipResult == "OK":
+                    try:
+                        self.nowPrice = self.bid_price(self.auid)
+                        print("目前金額:$%s" % self.nowPrice)
+                        #查價，但是如果發生查價問題，那就一樣辨識，不管現在多少錢
+                        if int(self.nowPrice) >= int(self.maxPrice):
+                            print ('超過最高投標金額，停止驗證碼辨識')
+                            continue
+                    except:
+                        print ("查價功能被網站封鎖，請稍後再試")
+                        
                     X = self.processPic_bid('img.jpeg')
                     predicted = ''
                     for p in self.bid_model.predict(X):
@@ -70,6 +72,5 @@ WebsiteOperation = bidWebsiteOperation(main_url,auid)
 WebsiteOperation.check_first_bidder(account)
 price_now = WebsiteOperation.bid_price()
 maxPrice  = input('02.目前價格$%s，最高投標金額: '% price_now)
-refreshPriceTimer  = input('03.價格更新速度/秒: ')
-_bidbuy = bidbuy(maxPrice,main_url,auid,refreshPriceTimer)
+_bidbuy = bidbuy(maxPrice,main_url,auid)
 _bidbuy.main()
