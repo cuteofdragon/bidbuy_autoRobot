@@ -158,6 +158,6 @@ dependencies:
   - zlib=1.2.11=h62dcd97_4
   - zstd=1.4.5=h04227a9_0
   - pip:
-    - pillow==5.1.0
+    - pillow==7.2.0
 prefix: D:\anaconda\envs\te
 

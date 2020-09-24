@@ -63,8 +63,8 @@ else:
 print("請校正您的按鍵精靈啟動時間")
 
 
-account  = "a0937"#input('02.帳　　號:　') 
-auid = "476150"#input('01.投標物件: ')
+account  = input('02.帳　　號:　') 
+auid = input('01.投標物件: ')
 
 WebsiteOperation = bidWebsiteOperation(main_url,auid)
 WebsiteOperation.check_first_bidder(account)
