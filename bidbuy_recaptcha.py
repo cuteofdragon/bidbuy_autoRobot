@@ -37,7 +37,7 @@ class bidbuy(clipboradAction,bidWebsiteOperation):
     def main(self):
         while True:
             if int(self.nowPrice) >= int(self.maxPrice):
-                print ('超過最高投標金額')
+                print ('超過最高投標金額，停止驗證碼辨識')
                 break
             try:
                 ReadClipResult = self.ReadClipboard()
@@ -55,7 +55,7 @@ class bidbuy(clipboradAction,bidWebsiteOperation):
 main_url='https://shwoo.gov.taipei/shwoo'
 
 diffTime = time.time()-(int(json.loads(requests.post(main_url+'/product/product00/websocket', data={'message':'{"no":4}'}).json())['serverTime'])/1000)
-
+print ("v1.1")
 if diffTime > 0:
     print ('結果為正 表示測試的電腦比惜物網"快" %s 秒' % diffTime)
 else:
