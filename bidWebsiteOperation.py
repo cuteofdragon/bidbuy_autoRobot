@@ -49,7 +49,6 @@ class bidWebsiteOperation:
             try:
                 first_account = json.loads(requests.post(self.main_url+'/product/product00/websocket', data={'message':'{"no":3,"auid":"%s"}'%self.auid,}, timeout=0.8).json())['detail'][0]
             except:
-                print('check timeout')
                 continue
             if first_account: 
                 break
