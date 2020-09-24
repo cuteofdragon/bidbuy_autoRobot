@@ -40,7 +40,7 @@ class bidbuy(clipboradAction,bidWebsiteOperation):
                         #查價，但是如果發生查價問題，那就一樣辨識，不管現在多少錢
                         if int(self.nowPrice) >= int(self.maxPrice):
                             print ('超過最高投標金額，停止驗證碼辨識')
-                            continue
+                            break
                     except:
                         print ("查價功能被網站封鎖，請稍後再試")
                         
